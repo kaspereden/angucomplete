@@ -78,8 +78,14 @@ angular.module('angucomplete', [] )
                         var text = titleCode.join(' ');
                         if ($scope.matchClass) {
                             var re = new RegExp(str, 'i');
-                            var strPart = text.match(re)[0];
-                            text = $sce.trustAsHtml(text.replace(re, '<span class="'+ $scope.matchClass +'">'+ strPart +'</span>'));
+                            // when using a service the returned result does not have to contain the search string.
+                            // only perform this action when it is in the text
+                            var strPart = text.match(re);
+                            if (strPart) {
+                                strPart = strPart[0];
+                                text = text.replace(re, '<span class="'+ $scope.matchClass +'">'+ strPart +'</span>');
+                            }
+                            text = $sce.trustAsHtml(text);
                         }
 
                         var resultRow = {
